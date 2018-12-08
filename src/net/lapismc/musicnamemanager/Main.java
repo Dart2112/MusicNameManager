@@ -55,7 +55,7 @@ public class Main {
                     }
                     if (!title.equals("")) {
                         if (!artist.equals("")) {
-                            title = artist + " - " + title;
+                            title = title + " - " + artist;
                         }
                         String invalidCharRemoved = title.replaceAll("[\\\\/:*?\"<>|]", "");
                         f.renameTo(new File(root + File.separator + invalidCharRemoved + ".mp3"));
