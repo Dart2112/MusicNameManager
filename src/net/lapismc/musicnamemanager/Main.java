@@ -43,14 +43,20 @@ public class Main {
             for (File f : root.toFile().listFiles()) {
                 if (f.getName().endsWith(".mp3")) {
                     String title = "";
+                    String artist = "";
                     try {
                         AudioFile audioFile = AudioFileIO.read(f);
                         Tag tag = audioFile.getTag();
                         title = tag.getFirst(FieldKey.TITLE);
+                        artist = tag.getFirst(FieldKey.ARTIST);
+
                     } catch (IOException | CannotReadException | ReadOnlyFileException | TagException | InvalidAudioFrameException e) {
                         e.printStackTrace();
                     }
                     if (!title.equals("")) {
+                        if (!artist.equals("")) {
+                            title = artist + " - " + title;
+                        }
                         String invalidCharRemoved = title.replaceAll("[\\\\/:*?\"<>|]", "");
                         f.renameTo(new File(root + File.separator + invalidCharRemoved + ".mp3"));
                     } else {
