@@ -28,9 +28,11 @@ public class Main {
                     String name = f.getName();
                     name = name.replaceAll("\\(.*\\)", "");
                     name = name.replaceAll("\\[.*]", "");
-                    String id = name.substring(name.length() - 16, name.lastIndexOf('.'));
-                    name = name.replace(id, "");
-                    System.out.println(name.substring(name.length() - 5, name.length() - 4));
+                    if (name.contains("-")) {
+                        String id = name.substring(name.lastIndexOf('-'), name.lastIndexOf('.'));
+                        if (id.length() == 12)
+                            name = name.replace(id, "");
+                    }
                     while (name.substring(name.length() - 5, name.length() - 4).equals(" ")) {
                         name = name.substring(0, name.length() - 5) + name.substring(name.length() - 4);
                     }
@@ -49,7 +51,6 @@ public class Main {
                         Tag tag = audioFile.getTag();
                         title = tag.getFirst(FieldKey.TITLE);
                         artist = tag.getFirst(FieldKey.ARTIST);
-
                     } catch (IOException | CannotReadException | ReadOnlyFileException | TagException | InvalidAudioFrameException e) {
                         e.printStackTrace();
                     }
