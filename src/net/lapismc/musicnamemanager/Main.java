@@ -3,6 +3,7 @@ package net.lapismc.musicnamemanager;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.exceptions.CannotReadException;
+import org.jaudiotagger.audio.exceptions.CannotWriteException;
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
 import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.tag.FieldKey;
@@ -21,7 +22,7 @@ public class Main {
         int response = JOptionPane.showConfirmDialog(null, "Is this for files from youtube?", "Ready to go!", dialogButton);
         boolean youtube = response == JOptionPane.YES_OPTION;
         if (youtube) {
-            //This code if for renaming songs from youtube
+            //This code is for renaming songs from youtube
             Path root = new File("./").toPath();
             for (File f : root.toFile().listFiles()) {
                 if (!f.getName().endsWith(".jar")) {
@@ -30,11 +31,11 @@ public class Main {
                     name = name.replaceAll("\\[.*]", "");
                     if (name.contains("-")) {
                         String id = name.substring(name.lastIndexOf('-'), name.lastIndexOf('.'));
-                        if (id.length() == 12)
+                        if (id.length() == 12 && !id.contains(" "))
                             name = name.replace(id, "");
                     }
-                    while (name.substring(name.length() - 5, name.length() - 4).equals(" ")) {
-                        name = name.substring(0, name.length() - 5) + name.substring(name.length() - 4);
+                    while (name.charAt(name.lastIndexOf('.') - 1) == ' ') {
+                        name = name.substring(0, name.lastIndexOf('.') - 1) + name.substring(name.lastIndexOf('.'));
                     }
                     f.renameTo(new File(name));
                 }
@@ -51,7 +52,12 @@ public class Main {
                         Tag tag = audioFile.getTag();
                         title = tag.getFirst(FieldKey.TITLE);
                         artist = tag.getFirst(FieldKey.ARTIST);
-                    } catch (IOException | CannotReadException | ReadOnlyFileException | TagException | InvalidAudioFrameException e) {
+                        tag = audioFile.createDefaultTag();
+                        tag.setField(FieldKey.TITLE, title);
+                        tag.setField(FieldKey.ARTIST, artist);
+                        audioFile.setTag(tag);
+                        audioFile.commit();
+                    } catch (IOException | CannotReadException | ReadOnlyFileException | TagException | InvalidAudioFrameException | CannotWriteException e) {
                         e.printStackTrace();
                     }
                     if (!title.equals("")) {
