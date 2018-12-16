@@ -57,7 +57,8 @@ public class Main {
                         tag = audioFile.createDefaultTag();
                         tag.setField(FieldKey.TITLE, title);
                         tag.setField(FieldKey.ARTIST, artist);
-                        tag.setField(artwork);
+                        if (artwork != null)
+                            tag.setField(artwork);
                         audioFile.setTag(tag);
                         audioFile.commit();
                     } catch (IOException | CannotReadException | ReadOnlyFileException | TagException | InvalidAudioFrameException | CannotWriteException e) {
