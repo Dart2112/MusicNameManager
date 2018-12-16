@@ -9,6 +9,7 @@ import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagException;
+import org.jaudiotagger.tag.datatype.Artwork;
 
 import javax.swing.*;
 import java.io.File;
@@ -52,9 +53,11 @@ public class Main {
                         Tag tag = audioFile.getTag();
                         title = tag.getFirst(FieldKey.TITLE);
                         artist = tag.getFirst(FieldKey.ARTIST);
+                        Artwork artwork = tag.getFirstArtwork();
                         tag = audioFile.createDefaultTag();
                         tag.setField(FieldKey.TITLE, title);
                         tag.setField(FieldKey.ARTIST, artist);
+                        tag.setField(artwork);
                         audioFile.setTag(tag);
                         audioFile.commit();
                     } catch (IOException | CannotReadException | ReadOnlyFileException | TagException | InvalidAudioFrameException | CannotWriteException e) {
