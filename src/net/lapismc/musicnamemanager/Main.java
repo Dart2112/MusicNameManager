@@ -30,8 +30,8 @@ public class Main {
                     String name = f.getName();
                     name = name.replaceAll("\\(.*\\)", "");
                     name = name.replaceAll("\\[.*]", "");
-                    if (name.contains("-")) {
-                        String id = name.substring(name.lastIndexOf('-'), name.lastIndexOf('.'));
+                    if (name.contains("-") && name.charAt(name.lastIndexOf(".") - 12) == '-') {
+                        String id = name.substring(name.lastIndexOf('.') - 12, name.lastIndexOf('.'));
                         if (id.length() == 12 && !id.contains(" "))
                             name = name.replace(id, "");
                     }
