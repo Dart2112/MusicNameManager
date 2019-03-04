@@ -22,10 +22,16 @@ public class Main {
         int dialogButton = JOptionPane.YES_NO_OPTION;
         int response = JOptionPane.showConfirmDialog(null, "Is this for files from youtube?", "Ready to go!", dialogButton);
         boolean youtube = response == JOptionPane.YES_OPTION;
+        Path root = new File("./").toPath();
+        File input = new File(root.toFile(), "Input");
+        File output = new File(root.toFile(), "Output");
+        if (!input.exists() || !output.exists()) {
+            input.mkdirs();
+            output.mkdirs();
+        }
         if (youtube) {
             //This code is for renaming songs from youtube
-            Path root = new File("./").toPath();
-            for (File f : root.toFile().listFiles()) {
+            for (File f : input.listFiles()) {
                 if (!f.getName().endsWith(".jar")) {
                     String name = f.getName();
                     name = name.replaceAll("\\(.*\\)", "");
@@ -38,15 +44,14 @@ public class Main {
                     while (name.charAt(name.lastIndexOf('.') - 1) == ' ') {
                         name = name.substring(0, name.lastIndexOf('.') - 1) + name.substring(name.lastIndexOf('.'));
                     }
-                    f.renameTo(new File(name));
+                    f.renameTo(new File(output, name));
                 }
             }
         } else {
             //this code is for files from google play music
-            Path root = new File("./").toPath();
-            for (File f : root.toFile().listFiles()) {
+            for (File f : input.listFiles()) {
                 if (f.getName().endsWith(".mp3")) {
-                    String title = "";
+                    String title;
                     String artist = "";
                     try {
                         AudioFile audioFile = AudioFileIO.read(f);
@@ -63,13 +68,14 @@ public class Main {
                         audioFile.commit();
                     } catch (IOException | CannotReadException | ReadOnlyFileException | TagException | InvalidAudioFrameException | CannotWriteException e) {
                         e.printStackTrace();
+                        title = "";
                     }
                     if (!title.equals("")) {
                         if (!artist.equals("")) {
                             title = title + " - " + artist;
                         }
                         String invalidCharRemoved = title.replaceAll("[\\\\/:*?\"<>|]", "");
-                        f.renameTo(new File(root + File.separator + invalidCharRemoved + ".mp3"));
+                        f.renameTo(new File(output, invalidCharRemoved + ".mp3"));
                     } else {
                         System.out.println("Unable to get title for " + f.getName());
                     }
