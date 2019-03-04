@@ -15,6 +15,7 @@ import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Random;
 
 public class Main {
 
@@ -75,7 +76,11 @@ public class Main {
                             title = title + " - " + artist;
                         }
                         String invalidCharRemoved = title.replaceAll("[\\\\/:*?\"<>|]", "");
-                        f.renameTo(new File(output, invalidCharRemoved + ".mp3"));
+                        if (new File(output, invalidCharRemoved + ".mp3").exists()) {
+                            f.renameTo(new File(output, "_" + new Random().nextInt(100) + invalidCharRemoved + ".mp3"));
+                        } else {
+                            f.renameTo(new File(output, invalidCharRemoved + ".mp3"));
+                        }
                     } else {
                         System.out.println("Unable to get title for " + f.getName());
                     }
