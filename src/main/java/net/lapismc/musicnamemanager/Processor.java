@@ -66,13 +66,15 @@ public class Processor {
 
     public String generateAudioFileName(AudioFile audioFile) throws FieldDataInvalidException, CannotWriteException {
         Tag tag = audioFile.getTag();
-        String title, artist;
+        String title, artist, album;
         title = tag.getFirst(FieldKey.TITLE);
         artist = tag.getFirst(FieldKey.ARTIST);
+        album = tag.getFirst(FieldKey.ALBUM);
         Artwork artwork = tag.getFirstArtwork();
         tag = audioFile.createDefaultTag();
         tag.setField(FieldKey.TITLE, title);
         tag.setField(FieldKey.ARTIST, artist);
+        tag.setField(FieldKey.ALBUM, album);
         if (artwork != null)
             tag.setField(artwork);
         audioFile.setTag(tag);
@@ -81,7 +83,8 @@ public class Processor {
             if (!artist.equals("")) {
                 title = title + " - " + artist;
             }
-            return title.replaceAll("[\\\\/:*?\"<>|]", "");
+            title = title.replaceAll("[\\\\/:*?\"<>|]", "");
+            return cleanupWhitespace(title);
         } else {
             return "";
         }
@@ -98,11 +101,21 @@ public class Processor {
         while (name.charAt(name.lastIndexOf('.') - 1) == ' ') {
             name = name.substring(0, name.lastIndexOf('.') - 1) + name.substring(name.lastIndexOf('.'));
         }
-        name = name.replace("_", " ");
-        while (name.contains("  ")) {
-            name = name.replace("  ", " ");
+        return cleanupWhitespace(name);
+    }
+
+    private String cleanupWhitespace(String s) {
+        s = s.replace("_", " ");
+        while (s.startsWith(" ")) {
+            s = s.substring(1);
         }
-        return name;
+        while (s.endsWith(" ")) {
+            s = s.substring(0, s.length() - 1);
+        }
+        while (s.contains("  ")) {
+            s = s.replace("  ", " ");
+        }
+        return s;
     }
 
     private void log(String msg) {
