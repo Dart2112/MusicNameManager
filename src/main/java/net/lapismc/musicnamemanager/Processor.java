@@ -66,15 +66,17 @@ public class Processor {
 
     public String generateAudioFileName(AudioFile audioFile) throws FieldDataInvalidException, CannotWriteException {
         Tag tag = audioFile.getTag();
-        String title, artist, album;
+        String title, artist, album, albumArtist;
         title = tag.getFirst(FieldKey.TITLE);
         artist = tag.getFirst(FieldKey.ARTIST);
         album = tag.getFirst(FieldKey.ALBUM);
+        albumArtist = tag.getFirst(FieldKey.ALBUM_ARTIST);
         Artwork artwork = tag.getFirstArtwork();
         tag = audioFile.createDefaultTag();
         tag.setField(FieldKey.TITLE, title);
         tag.setField(FieldKey.ARTIST, artist);
         tag.setField(FieldKey.ALBUM, album);
+        tag.setField(FieldKey.ALBUM_ARTIST, albumArtist);
         if (artwork != null)
             tag.setField(artwork);
         audioFile.setTag(tag);
