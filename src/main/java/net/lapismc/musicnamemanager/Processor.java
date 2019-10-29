@@ -1,5 +1,6 @@
 package net.lapismc.musicnamemanager;
 
+import org.apache.commons.io.FileUtils;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.exceptions.CannotWriteException;
@@ -10,6 +11,7 @@ import org.jaudiotagger.tag.datatype.Artwork;
 
 import javax.swing.*;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Random;
 import java.util.logging.LogManager;
@@ -22,7 +24,7 @@ public class Processor {
         LogManager.getLogManager().reset();
     }
 
-    void run() {
+    void run() throws IOException {
         int dialogButton = JOptionPane.YES_NO_OPTION;
         int response = JOptionPane.showConfirmDialog(null, "Is this for files from youtube?", "Ready to go!", dialogButton);
         boolean youtube = response == JOptionPane.YES_OPTION;
@@ -40,12 +42,12 @@ public class Processor {
         }
     }
 
-    private void renameFromYouTube(File dir) {
+    private void renameFromYouTube(File dir) throws IOException {
         //This code is for renaming songs from youtube
         for (File f : dir.listFiles()) {
             if (f.isDirectory()) {
                 renameFromYouTube(f);
-                f.deleteOnExit();
+                FileUtils.forceDeleteOnExit(f);
                 continue;
             }
             if (!f.getName().endsWith(".jar")) {
@@ -55,7 +57,7 @@ public class Processor {
         }
     }
 
-    private void renameWithMetaData(File dir) {
+    private void renameWithMetaData(File dir) throws IOException {
         //this code is for files with meta data
         for (File f : dir.listFiles()) {
             if (f.getName().endsWith(".mp3")) {
@@ -77,7 +79,7 @@ public class Processor {
                 }
             } else if (f.isDirectory()) {
                 renameWithMetaData(f);
-                f.deleteOnExit();
+                FileUtils.forceDeleteOnExit(f);
             }
         }
     }
