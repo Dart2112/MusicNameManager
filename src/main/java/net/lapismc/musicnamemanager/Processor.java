@@ -16,6 +16,8 @@ import java.util.logging.LogManager;
 
 public class Processor {
 
+    private File output;
+
     public Processor() {
         LogManager.getLogManager().reset();
     }
@@ -26,40 +28,56 @@ public class Processor {
         boolean youtube = response == JOptionPane.YES_OPTION;
         Path root = new File("./").toPath();
         File input = new File(root.toFile(), "Input");
-        File output = new File(root.toFile(), "Output");
+        output = new File(root.toFile(), "Output");
         if (!input.exists() || !output.exists()) {
             input.mkdirs();
             output.mkdirs();
         }
         if (youtube) {
-            //This code is for renaming songs from youtube
-            for (File f : input.listFiles()) {
-                if (!f.getName().endsWith(".jar")) {
-                    String name = cleanupYoutubeName(f.getName());
-                    f.renameTo(new File(output, name));
-                }
-            }
+            renameFromYouTube(input);
         } else {
-            //this code is for files from google play music
-            for (File f : input.listFiles()) {
-                if (f.getName().endsWith(".mp3")) {
-                    String name = "";
-                    try {
-                        AudioFile audioFile = AudioFileIO.read(f);
-                        name = generateAudioFileName(audioFile);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    if (name.equals("")) {
-                        log("Unable to get title for " + f.getName());
-                        continue;
-                    }
-                    if (new File(output, name + ".mp3").exists()) {
-                        f.renameTo(new File(output, "_" + new Random().nextInt(100) + name + ".mp3"));
-                    } else {
-                        f.renameTo(new File(output, name + ".mp3"));
-                    }
+            renameWithMetaData(input);
+        }
+    }
+
+    private void renameFromYouTube(File dir) {
+        //This code is for renaming songs from youtube
+        for (File f : dir.listFiles()) {
+            if (f.isDirectory()) {
+                renameFromYouTube(f);
+                f.deleteOnExit();
+                continue;
+            }
+            if (!f.getName().endsWith(".jar")) {
+                String name = cleanupYoutubeName(f.getName());
+                f.renameTo(new File(output, name));
+            }
+        }
+    }
+
+    private void renameWithMetaData(File dir) {
+        //this code is for files with meta data
+        for (File f : dir.listFiles()) {
+            if (f.getName().endsWith(".mp3")) {
+                String name = "";
+                try {
+                    AudioFile audioFile = AudioFileIO.read(f);
+                    name = generateAudioFileName(audioFile);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+                if (name.equals("")) {
+                    log("Unable to get title for " + f.getName());
+                    continue;
+                }
+                if (new File(output, name + ".mp3").exists()) {
+                    f.renameTo(new File(output, "_" + new Random().nextInt(100) + name + ".mp3"));
+                } else {
+                    f.renameTo(new File(output, name + ".mp3"));
+                }
+            } else if (f.isDirectory()) {
+                renameWithMetaData(f);
+                f.deleteOnExit();
             }
         }
     }
