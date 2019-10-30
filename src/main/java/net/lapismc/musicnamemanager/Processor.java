@@ -7,7 +7,6 @@ import org.jaudiotagger.audio.exceptions.CannotWriteException;
 import org.jaudiotagger.tag.FieldDataInvalidException;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
-import org.jaudiotagger.tag.datatype.Artwork;
 
 import javax.swing.*;
 import java.io.File;
@@ -47,7 +46,7 @@ public class Processor {
         for (File f : dir.listFiles()) {
             if (f.isDirectory()) {
                 renameFromYouTube(f);
-                FileUtils.forceDeleteOnExit(f);
+                FileUtils.deleteDirectory(dir);
                 continue;
             }
             if (!f.getName().endsWith(".jar")) {
@@ -89,18 +88,6 @@ public class Processor {
         String title, artist, album, albumArtist;
         title = tag.getFirst(FieldKey.TITLE);
         artist = tag.getFirst(FieldKey.ARTIST);
-        album = tag.getFirst(FieldKey.ALBUM);
-        albumArtist = tag.getFirst(FieldKey.ALBUM_ARTIST);
-        Artwork artwork = tag.getFirstArtwork();
-        tag = audioFile.createDefaultTag();
-        tag.setField(FieldKey.TITLE, title);
-        tag.setField(FieldKey.ARTIST, artist);
-        tag.setField(FieldKey.ALBUM, album);
-        tag.setField(FieldKey.ALBUM_ARTIST, albumArtist);
-        if (artwork != null)
-            tag.setField(artwork);
-        audioFile.setTag(tag);
-        audioFile.commit();
         if (!title.equals("")) {
             if (!artist.equals("")) {
                 title = title + " - " + artist;
