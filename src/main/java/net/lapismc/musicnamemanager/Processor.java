@@ -3,8 +3,6 @@ package net.lapismc.musicnamemanager;
 import org.apache.commons.io.FileUtils;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
-import org.jaudiotagger.audio.exceptions.CannotWriteException;
-import org.jaudiotagger.tag.FieldDataInvalidException;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 
@@ -83,9 +81,9 @@ public class Processor {
         }
     }
 
-    public String generateAudioFileName(AudioFile audioFile) throws FieldDataInvalidException, CannotWriteException {
+    public String generateAudioFileName(AudioFile audioFile) {
         Tag tag = audioFile.getTag();
-        String title, artist, album, albumArtist;
+        String title, artist;
         title = tag.getFirst(FieldKey.TITLE);
         artist = tag.getFirst(FieldKey.ARTIST);
         if (!title.equals("")) {
