@@ -1,13 +1,12 @@
 package net.lapismc.musicnamemanager;
 
 import org.apache.commons.io.FileUtils;
-import org.jaudiotagger.audio.AudioFile;
-import org.jaudiotagger.tag.FieldKey;
-import org.jaudiotagger.tag.Tag;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.LogManager;
 
 public class Processor {
@@ -44,25 +43,8 @@ public class Processor {
         }
     }
 
-    public String generateAudioFileName(AudioFile audioFile) {
-        Tag tag = audioFile.getTag();
-        String title, artist;
-        title = tag.getFirst(FieldKey.TITLE);
-        artist = tag.getFirst(FieldKey.ARTIST);
-        if (!title.equals("")) {
-            if (!artist.equals("")) {
-                title = title + " - " + artist;
-            }
-            title = title.replaceAll("[\\\\/:*?\"<>|]", "");
-            return cleanupWhitespace(title);
-        } else {
-            return "";
-        }
-    }
-
     public String cleanupYoutubeName(String name) {
-        name = name.replaceAll("\\(([^()]|)*\\)", "");
-        name = name.replaceAll("\\[([^()]|)*]", "");
+        name = removeBracketedTags(name);
         if (name.contains("-") && name.charAt(name.lastIndexOf(".") - 12) == '-') {
             String id = name.substring(name.lastIndexOf('.') - 12, name.lastIndexOf('.'));
             if (id.length() == 12 && !id.contains(" "))
@@ -72,6 +54,46 @@ public class Processor {
             name = name.substring(0, name.lastIndexOf('.') - 1) + name.substring(name.lastIndexOf('.'));
         }
         return cleanupWhitespace(name);
+    }
+
+    private String removeBracketedTags(String name) {
+
+        //Process smooth brackets e.g. ( & )
+        while (name.contains("(")) {
+            int open = name.lastIndexOf("(");
+            int close = name.lastIndexOf(")");
+            String tag = name.substring(open + 1, close - 1).toLowerCase();
+            String wholeTag = name.substring(open, close);
+            if (matchFilter(tag)) {
+                name = name.replace(name.substring(open, close), "");
+            }
+            name = name.replace(wholeTag, wholeTag.replace("(", "@1").replace(")", "@2"));
+        }
+        name = name.replace("@1", "(").replace("@2", ")");
+        //Process hard brackets e.g. [ & ]
+        while (name.contains("[")) {
+            int open = name.lastIndexOf("[");
+            int close = name.lastIndexOf("]");
+            String tag = name.substring(open + 1, close).toLowerCase();
+            String wholeTag = name.substring(open, close + 1);
+            System.out.println(tag + " " + wholeTag);
+            if (matchFilter(tag)) {
+                name = name.replace(wholeTag, "");
+            } else {
+                name = name.replace(wholeTag, wholeTag.replace("[", "@1").replace("]", "@2"));
+            }
+        }
+        name = name.replace("@1", "[").replace("@2", "]");
+        return name;
+    }
+
+    private boolean matchFilter(String tag) {
+        List<String> wordsToFilter = Arrays.asList("lyric", "official", "video");
+        for (String word : wordsToFilter) {
+            if (tag.contains(word))
+                return true;
+        }
+        return false;
     }
 
     private String cleanupWhitespace(String s) {
