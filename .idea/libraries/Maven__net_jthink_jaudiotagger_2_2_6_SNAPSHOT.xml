@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: net.jthink:jaudiotagger:2.2.6-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/net/jthink/jaudiotagger/2.2.6-SNAPSHOT/jaudiotagger-2.2.6-SNAPSHOT.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/net/jthink/jaudiotagger/2.2.6-SNAPSHOT/jaudiotagger-2.2.6-SNAPSHOT-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/net/jthink/jaudiotagger/2.2.6-SNAPSHOT/jaudiotagger-2.2.6-SNAPSHOT-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

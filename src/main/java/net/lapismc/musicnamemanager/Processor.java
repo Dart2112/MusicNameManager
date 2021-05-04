@@ -19,8 +19,8 @@ public class Processor {
 
     void run() throws IOException {
         Path root = new File("./").toPath();
-        File input = new File(root.toFile(), "Input");
-        output = new File(root.toFile(), "Output");
+        File input = new File(root.toFile(), "Download" + File.separator + "Output");
+        output = new File(root.toFile(), "Edit");
         if (!input.exists() || !output.exists()) {
             input.mkdirs();
             output.mkdirs();
