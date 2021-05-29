@@ -61,6 +61,12 @@ shadowJar {
     exclude 'LICENSE.txt'
 }
 
+jar {
+    manifest {
+        attributes 'Main-Class': 'net.lapismc.musicnamemanager.Main'
+    }
+}
+
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
