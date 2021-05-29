@@ -57,34 +57,28 @@ public class Processor {
     }
 
     private String removeBracketedTags(String name) {
-
         //Process smooth brackets e.g. ( & )
-        while (name.contains("(")) {
-            int open = name.lastIndexOf("(");
-            int close = name.lastIndexOf(")");
-            String tag = name.substring(open + 1, close - 1).toLowerCase();
-            String wholeTag = name.substring(open, close);
-            if (matchFilter(tag)) {
-                name = name.replace(name.substring(open, close), "");
-            }
-            name = name.replace(wholeTag, wholeTag.replace("(", "@1").replace(")", "@2"));
-        }
-        name = name.replace("@1", "(").replace("@2", ")");
+        name = removeMatchedContents("(", ")", name);
         //Process hard brackets e.g. [ & ]
-        while (name.contains("[")) {
-            int open = name.lastIndexOf("[");
-            int close = name.lastIndexOf("]");
-            String tag = name.substring(open + 1, close).toLowerCase();
-            String wholeTag = name.substring(open, close + 1);
+        name = removeMatchedContents("[", "]", name);
+        return name;
+    }
+
+    private String removeMatchedContents(String start, String end, String text) {
+        while (text.contains(start)) {
+            int open = text.lastIndexOf(start);
+            int close = text.lastIndexOf(end);
+            String tag = text.substring(open + 1, close).toLowerCase();
+            String wholeTag = text.substring(open, close + 1);
             System.out.println(tag + " " + wholeTag);
             if (matchFilter(tag)) {
-                name = name.replace(wholeTag, "");
+                text = text.replace(wholeTag, "");
             } else {
-                name = name.replace(wholeTag, wholeTag.replace("[", "@1").replace("]", "@2"));
+                text = text.replace(wholeTag, wholeTag.replace(start, "@1").replace(end, "@2"));
             }
         }
-        name = name.replace("@1", "[").replace("@2", "]");
-        return name;
+        text = text.replace("@1", start).replace("@2", end);
+        return text;
     }
 
     private boolean matchFilter(String tag) {

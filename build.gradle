@@ -56,6 +56,9 @@ dependencies {
 shadowJar {
     archiveFileName.set(archivesBaseName + ".jar")
     exclude 'javax/**'
+    exclude 'junit/**'
+    exclude 'LICENSE-junit.txt'
+    exclude 'LICENSE.txt'
 }
 
 tasks.withType(JavaCompile) {

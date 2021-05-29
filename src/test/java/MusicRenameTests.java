@@ -17,7 +17,7 @@ public class MusicRenameTests {
                 "Ghostbusters Theme Song Remix - The Living Tombstone.mp3",
                 "Imany - Don't Be So Shy (Filatov & Karas Remix) Official Music Video.mp3",
                 "Closer vs. Airplanes (Mashup) - The Chainsmokers, Halsey & B.O.B (By Adrian Mashups).mp3"
-                , "Amazing.mp3", "Olivia Rodrigo - jealousy, jealousy.mp4"};
+                , "Amazing.mp3", "Olivia Rodrigo - jealousy, jealousy.mp3"};
         Processor processor = new Processor();
         for (int i = 0; i < rawNames.length; i++) {
             String input = rawNames[i];
