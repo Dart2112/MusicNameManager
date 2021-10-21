@@ -48,9 +48,8 @@ repositories {
 }
 
 dependencies {
-    implementation 'junit:junit:4.13.1'
-    compile 'net.jthink:jaudiotagger:2.2.6-SNAPSHOT'
-    compile 'commons-io:commons-io:2.7'
+    implementation 'junit:junit:4.13.2'
+    compile 'commons-io:commons-io:2.11.0'
 }
 
 shadowJar {

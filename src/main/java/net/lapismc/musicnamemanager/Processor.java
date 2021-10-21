@@ -45,9 +45,9 @@ public class Processor {
 
     public String cleanupYoutubeName(String name) {
         name = removeBracketedTags(name);
-        if (name.contains("-") && name.charAt(name.lastIndexOf(".") - 12) == '-') {
-            String id = name.substring(name.lastIndexOf('.') - 12, name.lastIndexOf('.'));
-            if (id.length() == 12 && !id.contains(" "))
+        if (name.contains("[") && name.charAt(name.lastIndexOf(".") - 13) == '[') {
+            String id = name.substring(name.lastIndexOf('.') - 13, name.lastIndexOf('.'));
+            if (id.length() == 13 && !id.contains(" "))
                 name = name.replace(id, "");
         }
         while (name.charAt(name.lastIndexOf('.') - 1) == ' ') {
