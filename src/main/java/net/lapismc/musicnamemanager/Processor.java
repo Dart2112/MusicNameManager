@@ -19,7 +19,7 @@ public class Processor {
 
     void run() throws IOException {
         Path root = new File("./").toPath();
-        File input = new File(root.toFile(), "Download" + File.separator + "Output");
+        File input = new File(root.toFile(), "Download");
         output = new File(root.toFile(), "Edit");
         if (!input.exists() || !output.exists()) {
             input.mkdirs();
@@ -36,7 +36,7 @@ public class Processor {
                 FileUtils.deleteDirectory(dir);
                 continue;
             }
-            if (!f.getName().endsWith(".jar")) {
+            if (f.getName().endsWith(".mp3")) {
                 String name = cleanupYoutubeName(f.getName());
                 f.renameTo(new File(output, name));
             }
