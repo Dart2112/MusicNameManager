@@ -45,13 +45,19 @@ public class Processor {
 
     public String cleanupYoutubeName(String name) {
         name = removeBracketedTags(name);
+        //Remove youtube video ID
         if (name.contains("[") && name.charAt(name.lastIndexOf(".") - 13) == '[') {
             String id = name.substring(name.lastIndexOf('.') - 13, name.lastIndexOf('.'));
             if (id.length() == 13 && !id.contains(" "))
                 name = name.replace(id, "");
         }
+        //Remove whitespace at the end of the string
         while (name.charAt(name.lastIndexOf('.') - 1) == ' ') {
             name = name.substring(0, name.lastIndexOf('.') - 1) + name.substring(name.lastIndexOf('.'));
+        }
+        if (name.contains("？")) {
+            //Remove this stupid question mark
+            name = name.replace("？", "");
         }
         return cleanupWhitespace(name);
     }
