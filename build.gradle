@@ -36,7 +36,7 @@ plugins {
 }
 
 group = 'net.lapismc'
-archivesBaseName = "Music Name Manager"
+archivesBaseName = "MusicNameManager"
 version = '1.1.1'
 description = 'A script to rename files from YouTube DL'
 sourceCompatibility = '11'

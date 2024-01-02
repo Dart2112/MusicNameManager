@@ -88,7 +88,7 @@ public class Processor {
     }
 
     private boolean matchFilter(String tag) {
-        List<String> wordsToFilter = Arrays.asList("lyric", "official", "video");
+        List<String> wordsToFilter = Arrays.asList("lyric", "official", "video", "audio");
         for (String word : wordsToFilter) {
             if (tag.contains(word))
                 return true;
