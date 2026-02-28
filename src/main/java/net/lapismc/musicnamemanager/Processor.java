@@ -59,6 +59,10 @@ public class Processor {
             //Remove this stupid question mark
             name = name.replace("？", "");
         }
+        //Remove "- Topic-" tags
+        if (name.contains("- Topic-")) {
+            name = name.replace("Topic-", "");
+        }
         return cleanupWhitespace(name);
     }
 
