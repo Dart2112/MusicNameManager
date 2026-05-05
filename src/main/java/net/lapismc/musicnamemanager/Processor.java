@@ -5,6 +5,7 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.LogManager;
@@ -36,11 +37,19 @@ public class Processor {
                 FileUtils.deleteDirectory(dir);
                 continue;
             }
-            if (f.getName().endsWith(".mp3")) {
+            if (isMusicFile(f)) {
                 String name = cleanupYoutubeName(f.getName());
                 f.renameTo(new File(output, name));
             }
         }
+    }
+
+    private boolean isMusicFile(File file) {
+        //Check if the file extension is mp3, opus, or flac
+        //This will need to be expanded if there are more formats supported
+        String ext = file.getName().substring(file.getName().lastIndexOf(".") + 1);
+        List<String> validExtensions = new ArrayList<>(List.of("mp3", "opus", "flac"));
+        return validExtensions.contains(ext);
     }
 
     public String cleanupYoutubeName(String name) {
